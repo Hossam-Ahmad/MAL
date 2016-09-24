@@ -5,7 +5,6 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,6 +13,7 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements Communicator
         gridview = (GridView) findViewById(R.id.gridview);
         context = this;
         adapter = new DBAdapter(this);
-        if(checkOrientation() == 2 && ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+        if(Is_Tablet())
+        {
             View frag = findViewById(R.id.details_frag);
             frag.setVisibility(View.INVISIBLE);
         }
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
     {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem item = menu.findItem(R.id.menu_item_share);
-        if(checkOrientation() == 2 && ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE))
+        if(Is_Tablet())
         {
             mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
             shareIntent = new Intent(Intent.ACTION_SEND);
@@ -347,9 +348,17 @@ public class MainActivity extends AppCompatActivity implements Communicator
         frag.setVisibility(View.VISIBLE);
     }
 
-    public int checkOrientation()
+    public boolean Is_Tablet()
     {
-       return context.getResources().getConfiguration().orientation;
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int widthPixels = metrics.widthPixels;
+        int heightPixels = metrics.heightPixels;
+        float scaleFactor = metrics.density;
+        float widthDp = widthPixels / scaleFactor;
+        float heightDp = heightPixels / scaleFactor;
+        float smallestWidth = Math.min(widthDp, heightDp);
+        return smallestWidth >= 600;
     }
 
     public class get_movies extends AsyncTask<Void,Void,Void>
@@ -456,7 +465,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
             MyAdapter adapter2 = new MyAdapter(getBaseContext(),Data.movies);
             gridview.setAdapter(adapter2);
 
-            if(checkOrientation() == 2 && ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE))
+            if(Is_Tablet())
             {
                 respond(Data.movies.get(0));
                 FragmentManager fragmentManager = getFragmentManager();
@@ -475,7 +484,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
                     selected_movie = position;
                     if(shareIntent != null)
                         shareIntent.putExtra(Intent.EXTRA_TEXT, Data.movies.get(selected_movie).getTrailer1());
-                    if(checkOrientation() == 2 && ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE))
+                    if(Is_Tablet())
                     {
                         respond(Data.movies.get(position));
                     }
