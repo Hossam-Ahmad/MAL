@@ -115,14 +115,6 @@ public class Details_Fragment extends Fragment
                 play(v);
             }
         });
-
-        if(!Utilities.check_wifi(getActivity()))
-        {
-            btnTrailer1.setVisibility(View.GONE);
-            btnTrailer2.setVisibility(View.GONE);
-            getActivity().findViewById(R.id.trailer).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.seperator).setVisibility(View.GONE);
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -158,6 +150,14 @@ public class Details_Fragment extends Fragment
             btnTrailer2.setVisibility(View.INVISIBLE);
         else
             btnTrailer2.setVisibility(View.VISIBLE);
+
+        if(!Utilities.check_wifi(getActivity()))
+        {
+            btnTrailer1.setVisibility(View.GONE);
+            btnTrailer2.setVisibility(View.GONE);
+            getActivity().findViewById(R.id.trailer).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.seperator).setVisibility(View.GONE);
+        }
 
 
         if(Utilities.check_wifi(getActivity()))
