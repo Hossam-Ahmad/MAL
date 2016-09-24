@@ -162,6 +162,14 @@ public class Detailed extends AppCompatActivity {
         else
             btnTrailer2.setVisibility(View.VISIBLE);
 
+        if(!Utilities.check_wifi(this))
+        {
+            btnTrailer1.setVisibility(View.GONE);
+            btnTrailer2.setVisibility(View.GONE);
+            findViewById(R.id.trailer).setVisibility(View.GONE);
+            findViewById(R.id.seperator).setVisibility(View.GONE);
+        }
+
         String URL = "content://com.example.hossam.movies/favourite/"+ID;
         Uri students = Uri.parse(URL);
         Cursor c = this.managedQuery(students, null, null, null, null);
