@@ -105,8 +105,11 @@ public class MainActivity extends AppCompatActivity implements Communicator
             shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, Data.movies.get(selected_movie).getTrailer1());
-            mShareActionProvider.setShareIntent(shareIntent);
+            if(!Utilities.check_wifi(this))
+            {
+                shareIntent.putExtra(Intent.EXTRA_TEXT, Data.movies.get(selected_movie).getTrailer1());
+                mShareActionProvider.setShareIntent(shareIntent);
+            }
         }
         else
             item.setVisible(false);
@@ -161,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
             }
             else
                 data_offline();
-                showData();
+            showData();
             return true;
         }
         else if(id == R.id.favourite && Data.order != "favourite")
@@ -453,6 +456,11 @@ public class MainActivity extends AppCompatActivity implements Communicator
         {
             super.onPostExecute(aVoid);
             showData();
+            if(Is_Tablet())
+            {
+                shareIntent.putExtra(Intent.EXTRA_TEXT, Data.movies.get(selected_movie).getTrailer1());
+                mShareActionProvider.setShareIntent(shareIntent);
+            }
             cache();
         }
     }
