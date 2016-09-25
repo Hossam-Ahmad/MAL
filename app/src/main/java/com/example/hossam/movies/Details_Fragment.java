@@ -2,12 +2,9 @@ package com.example.hossam.movies;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -151,7 +148,7 @@ public class Details_Fragment extends Fragment
         else
             btnTrailer2.setVisibility(View.VISIBLE);
 
-        if(!Utilities.check_wifi(getActivity()))
+        if(!Utilities.check_internet(getActivity()))
         {
             btnTrailer1.setVisibility(View.GONE);
             btnTrailer2.setVisibility(View.GONE);
@@ -160,7 +157,7 @@ public class Details_Fragment extends Fragment
         }
 
 
-        if(Utilities.check_wifi(getActivity()))
+        if(Utilities.check_internet(getActivity()))
             Picasso.with(getActivity()).load(movie.getImageLink()).into(imageView);
         else
             imageView.setImageBitmap(movie.getImage_bmp());
