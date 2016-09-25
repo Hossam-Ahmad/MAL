@@ -461,7 +461,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
                 shareIntent.putExtra(Intent.EXTRA_TEXT, Data.movies.get(selected_movie).getTrailer1());
                 mShareActionProvider.setShareIntent(shareIntent);
             }
-            new CacheThread().run();
+            cache();
             if(progress != null)
                 progress.dismiss();
         }
