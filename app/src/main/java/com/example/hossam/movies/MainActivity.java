@@ -39,7 +39,7 @@ class Data
 
 public class MainActivity extends AppCompatActivity implements Communicator
 {
-    final String API_KEY = "";
+    final String API_KEY = "7686567ed5a6e3e363a2bb0e268fc737";
 
     Context context;
     String data = "",data_trailers="",Trailer1="",Trailer2="",data_reviews="";
