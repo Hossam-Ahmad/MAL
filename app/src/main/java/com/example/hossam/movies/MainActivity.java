@@ -39,7 +39,7 @@ class Data
 
 public class MainActivity extends AppCompatActivity implements Communicator
 {
-    final String API_KEY = "";
+    final String API_KEY = "7686567ed5a6e3e363a2bb0e268fc737";
 
     Context context;
     String data = "",data_trailers="",Trailer1="",Trailer2="",data_reviews="";
@@ -461,9 +461,49 @@ public class MainActivity extends AppCompatActivity implements Communicator
                 shareIntent.putExtra(Intent.EXTRA_TEXT, Data.movies.get(selected_movie).getTrailer1());
                 mShareActionProvider.setShareIntent(shareIntent);
             }
-            cache();
+            new CacheThread().run();
             if(progress != null)
                 progress.dismiss();
+        }
+    }
+
+    class CacheThread extends Thread
+    {
+        public void run()
+        {
+            Log.e("info","caching");
+
+            if(Data.order == "top_rated")
+            {
+                String URL = "content://com.example.hossam.movies/top";
+                Uri parse = Uri.parse(URL);
+                Cursor c = managedQuery(parse, null, null, null, null);
+                if(!c.moveToNext())
+                {
+                    Log.e("info","start cashing");
+                    for(int i=0;i<Data.movies.size();i++)
+                    {
+                        adapter.insertTop(Data.movies.get(i));
+                        Log.e("cashed",i+"");
+                    }
+                }
+            }
+
+            else if(Data.order == "popular")
+            {
+                String URL = "content://com.example.hossam.movies/pop";
+                Uri parse = Uri.parse(URL);
+                Cursor c = managedQuery(parse, null, null, null, null);
+                if(!c.moveToNext())
+                {
+                    for(int i=0;i<Data.movies.size();i++)
+                    {
+                        adapter.insertPop(Data.movies.get(i));
+                        Log.e("cashed", i + "");
+                    }
+                }
+            }
+            Log.e("info","cached");
         }
     }
 
