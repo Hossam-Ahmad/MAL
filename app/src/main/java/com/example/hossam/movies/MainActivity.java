@@ -39,7 +39,7 @@ class Data
 
 public class MainActivity extends AppCompatActivity implements Communicator
 {
-    final String API_KEY = "";
+    final String API_KEY = "7686567ed5a6e3e363a2bb0e268fc737";
 
     Context context;
     String data = "",data_trailers="",Trailer1="",Trailer2="",data_reviews="";
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
         else
             toolbar.setTitle("Favourite Movies");
 
-        if(Utilities.check_wifi(this))
+        if(Utilities.check_internet(this))
         {
             if(Data.movies.size() == 0)
             {
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
             shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            if(!Utilities.check_wifi(this))
+            if(Data.movies.size() > 0)
             {
                 shareIntent.putExtra(Intent.EXTRA_TEXT, Data.movies.get(selected_movie).getTrailer1());
                 mShareActionProvider.setShareIntent(shareIntent);
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
             Data.order = "top_rated";
             Data.movies.clear();
             showData();
-            if(Utilities.check_wifi(this))
+            if(Utilities.check_internet(this))
             {
                 progress = ProgressDialog.show(this, "please wait",
                         "loading movies ..", true);
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
             Data.order = "popular";
             Data.movies.clear();
             showData();
-            if(Utilities.check_wifi(this))
+            if(Utilities.check_internet(this))
             {
                 progress = ProgressDialog.show(this, "please wait",
                         "loading movies ..", true);
@@ -462,6 +462,8 @@ public class MainActivity extends AppCompatActivity implements Communicator
                 mShareActionProvider.setShareIntent(shareIntent);
             }
             cache();
+            if(progress != null)
+                progress.dismiss();
         }
     }
 
@@ -481,8 +483,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.show(details_fragment);
             }
-            if(progress != null)
-                progress.dismiss();
+
 
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
@@ -508,7 +509,7 @@ public class MainActivity extends AppCompatActivity implements Communicator
                         i.putExtra("trailer1",Data.movies.get(position).getTrailer1());
                         i.putExtra("trailer2",Data.movies.get(position).getTrailer2());
                         i.putExtra("reviews", Data.movies.get(position).getReviews());
-                        if(!Utilities.check_wifi(getApplicationContext()))
+                        if(!Utilities.check_internet(getApplicationContext()))
                             i.putExtra("image_bmp", Utilities.getBytes(Data.movies.get(position).getImage_bmp()));
                         startActivity(i);
                     }
@@ -544,56 +545,18 @@ public class MainActivity extends AppCompatActivity implements Communicator
         else if(Data.order == "popular")
         {
             String URL = "content://com.example.hossam.movies/pop";
-            Log.e("info","in Pop");
             Uri parse = Uri.parse(URL);
             Cursor c = managedQuery(parse, null, null, null, null);
             if(!c.moveToNext())
             {
                 for(int i=0;i<Data.movies.size();i++)
+                {
                     adapter.insertPop(Data.movies.get(i));
+                    Log.e("cashed", i + "");
+                }
             }
         }
         Log.e("info","cached");
     }
 
-    class cachingOFFLINE extends AsyncTask<Void,Void,Void>
-    {
-
-        @Override
-        protected Void doInBackground(Void... params)
-        {
-            Log.e("info","caching");
-
-            if(Data.order == "top_rated")
-            {
-                String URL = "content://com.example.hossam.movies/top";
-                Uri parse = Uri.parse(URL);
-                Cursor c = managedQuery(parse, null, null, null, null);
-                if(!c.moveToNext())
-                {
-                    Log.e("info","start cashing");
-                    for(int i=0;i<Data.movies.size();i++)
-                    {
-                        adapter.insertTop(Data.movies.get(i));
-                        Log.e("cashed",i+"");
-                    }
-                }
-            }
-
-            else if(Data.order == "pop")
-            {
-                String URL = "content://com.example.hossam.movies/pop";
-                Uri parse = Uri.parse(URL);
-                Cursor c = managedQuery(parse, null, null, null, null);
-                if(!c.moveToNext())
-                {
-                    for(int i=0;i<Data.movies.size();i++)
-                        adapter.insertPop(Data.movies.get(i));
-                }
-            }
-            Log.e("info","cached");
-            return null;
-        }
-
-    }
 }
