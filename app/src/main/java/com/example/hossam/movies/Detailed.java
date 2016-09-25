@@ -1,9 +1,7 @@
 package com.example.hossam.movies;
 
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -162,7 +160,7 @@ public class Detailed extends AppCompatActivity {
         else
             btnTrailer2.setVisibility(View.VISIBLE);
 
-        if(!Utilities.check_wifi(this))
+        if(!Utilities.check_internet(this))
         {
             btnTrailer1.setVisibility(View.GONE);
             btnTrailer2.setVisibility(View.GONE);
@@ -178,7 +176,7 @@ public class Detailed extends AppCompatActivity {
         else
             btnfavourite.setText("MAKE AS FAVOURITE");
 
-        if(Utilities.check_wifi(this))
+        if(Utilities.check_internet(this))
             Picasso.with(getBaseContext()).load(movie.getImageLink()).into(imageView);
         else
             imageView.setImageBitmap( Utilities.getImage(i.getByteArrayExtra("image_bmp")));
@@ -198,7 +196,7 @@ public class Detailed extends AppCompatActivity {
         scroll.setFocusableInTouchMode(true);
         scroll.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
 
-        if(!Utilities.check_wifi(this))
+        if(!Utilities.check_internet(this))
         {
             btnTrailer1.setVisibility(View.GONE);
             btnTrailer2.setVisibility(View.GONE);
