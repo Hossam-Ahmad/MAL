@@ -66,7 +66,7 @@ public class MyAdapter extends BaseAdapter
             star.setVisibility(View.INVISIBLE);
         }
 
-        if(Utilities.check_wifi(context))
+        if(Utilities.check_internet(context))
             Picasso.with(context).load(movies.get(i).getImageLink()).into(picture);
         else
             picture.setImageBitmap(movies.get(i).getImage_bmp());
